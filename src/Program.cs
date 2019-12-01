@@ -9,65 +9,54 @@ namespace Sudoku_Solver
         static void Main()
         {
             SudokuGrid grid = new SudokuGrid();
-            int[] inputArray = grid.inputArray;
-            int unknownSquares = grid.UnknownSquares(inputArray);
-            while (unknownSquares > 0)
+            while (grid.UnknownSquares() > 0)
             {
-                for (int i = 0; i < inputArray.Length; i++)
+                for (int i = 0; i < grid.inputArray.Length; i++)
                 {
-                    if (inputArray[i] == 0)
+                    if (grid.inputArray[i] == 0)
                     {
-                        int rowIndex = i / 9;
-                        int columnIndex = i % 9;
-                        List<int> rowKnownValues = new List<int>();
-                        List<int> columnKnownValues = new List<int>();
-                        List<int> squareKnownValues = new List<int>();
+                        Subspace subspace = new Subspace(i, grid.inputArray[i]);
 
-                        for (int j = rowIndex * 9; j < rowIndex * 9 + 9; j++)
+                        for (int j = subspace.rowIndex * 9; j < subspace.rowIndex * 9 + 9; j++)
                         {
-                            if (inputArray[j] != 0)
+                            if (grid.inputArray[j] != 0)
                             {
-                                rowKnownValues.Add(inputArray[j]);
+                                subspace.rowKnownValues.Add(grid.inputArray[j]);
                             }
                         }
 
-                        for (int j = columnIndex; j <= columnIndex + 72; j += 9)
+                        for (int j = subspace.columnIndex; j <= subspace.columnIndex + 72; j += 9)
                         {
-                            if (inputArray[j] != 0)
+                            if (grid.inputArray[j] != 0)
                             {
-                                columnKnownValues.Add(inputArray[j]);
+                                subspace.columnKnownValues.Add(grid.inputArray[j]);
                             }
                         }
 
-                        int squareRowIndex = rowIndex / 3;
-                        int squareColumnIndex = columnIndex / 3;
-
-                        for (int j = squareRowIndex * 3; j < squareRowIndex * 3 + 3; j++)
+                        for (int j = subspace.boxRowIndex * 3; j < subspace.boxRowIndex * 3 + 3; j++)
                         {
-                            for (int k = squareColumnIndex * 3; k < squareColumnIndex * 3 + 3; k++)
+                            for (int k = subspace.boxColumnIndex * 3; k < subspace.boxColumnIndex * 3 + 3; k++)
                             {
                                 int cellIndex = j * 9 + k;
-                                if (inputArray[cellIndex] != 0)
+                                if (grid.inputArray[cellIndex] != 0)
                                 {
-                                    squareKnownValues.Add(inputArray[cellIndex]);
+                                    subspace.boxKnownValues.Add(grid.inputArray[cellIndex]);
                                 }
                             }
                         }
 
-                        inputArray[i] = Decide(rowKnownValues, columnKnownValues, squareKnownValues);
-                        unknownSquares = grid.UnknownSquares(inputArray);
+                        grid.inputArray[i] = Decide(subspace);
                     }
                 }
             }
-            PrintOutput(inputArray);
+            PrintOutput(grid.inputArray);
         }
 
-        private static int Decide(List<int> rowKnownValues, List<int> columnKnownValues, List<int> squareKnownValues)
+        private static int Decide(Subspace subspace)
         {
-            List<int> allPossibleValues = Subspace.AllPossibleValues();
-            List<int> rowPossibleValues = ListComplement(rowKnownValues, allPossibleValues);
-            List<int> columnPossibleValues = ListComplement(columnKnownValues, allPossibleValues);
-            List<int> squarePossibleValues = ListComplement(squareKnownValues, allPossibleValues);
+            List<int> rowPossibleValues = SubspaceComplement(subspace.rowKnownValues);
+            List<int> columnPossibleValues = SubspaceComplement(subspace.columnKnownValues);
+            List<int> squarePossibleValues = SubspaceComplement(subspace.boxKnownValues);
 
             List<int> totalIntersection = rowPossibleValues.Intersect(columnPossibleValues.Intersect(squarePossibleValues)).ToList();
             if (totalIntersection.Count == 1)
@@ -80,12 +69,13 @@ namespace Sudoku_Solver
             }
         }
 
-        private static List<int> ListComplement(List<int> list1, List<int> list2)
+        private static List<int> SubspaceComplement(List<int> list1)
         {
+            List<int> fullSubspace = Subspace.fullSubspace;
             List<int> result = new List<int>();
-            for (int i = 0; i < list2.Count; i++)
+            for (int i = 0; i < fullSubspace.Count; i++)
             {
-                int listItem = list2[i];
+                int listItem = fullSubspace[i];
                 if (list1.Contains(listItem) == false)
                 {
                     result.Add(listItem);
@@ -94,10 +84,10 @@ namespace Sudoku_Solver
             return result;
         }
 
-        private static void PrintOutput(int[] inputArray)
+        private static void PrintOutput(int[] input)
         {
             string outputString = "";
-            foreach (int i in inputArray)
+            foreach (int i in input)
             {
                 outputString += i.ToString();
             }

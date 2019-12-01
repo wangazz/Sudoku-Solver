@@ -9,19 +9,7 @@ public class SudokuGrid
         inputArray = GetInputs();
     }
 
-    // public int UnknownSquares
-    // {
-    // 	get
-    // 	{
-    // 		return unknownSquares(inputArray);
-    // 	}
-    // 	set
-    // 	{
-    // 		unknownSquares = value;
-    // 	}
-    // }
-
-    public int UnknownSquares(int[] inputArray)
+    public int UnknownSquares()
     {
         int knownSquares = 0;
         foreach (int i in inputArray)
