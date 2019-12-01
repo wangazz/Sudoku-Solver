@@ -3,14 +3,13 @@ using System.Linq;
 
 public class Element
 {
-    public List<int> rowKnownValues = new List<int>();
-    public List<int> columnKnownValues = new List<int>();
-    public List<int> boxKnownValues = new List<int>();
-    
-    public int rowIndex;
-    public int columnIndex;
-    public int boxRowIndex;
-    public int boxColumnIndex;
+    private List<int> rowKnownValues = new List<int>();
+    private List<int> columnKnownValues = new List<int>();
+    private List<int> boxKnownValues = new List<int>();
+    private int rowIndex;
+    private int columnIndex;
+    private int boxRowIndex;
+    private int boxColumnIndex;
 
     public Element(SudokuGrid grid, int index)
     {
@@ -49,6 +48,21 @@ public class Element
         }
     }
 
+    private List<int> Complement(List<int> input)
+    {
+        List<int> fullSubspace = FullSubspace();
+        List<int> result = new List<int>();
+        for (int i = 0; i < fullSubspace.Count; i++)
+        {
+            int listItem = fullSubspace[i];
+            if (input.Contains(listItem) == false)
+            {
+                result.Add(listItem);
+            }
+        }
+        return result;
+    }
+
     public int Decide()
     {
         List<int> rowPossibleValues = Complement(rowKnownValues);
@@ -66,21 +80,6 @@ public class Element
         }
     }
 
-    private List<int> Complement(List<int> input)
-    {
-        List<int> fullSubspace = FullSubspace();
-        List<int> result = new List<int>();
-        for (int i = 0; i < fullSubspace.Count; i++)
-        {
-            int listItem = fullSubspace[i];
-            if (input.Contains(listItem) == false)
-            {
-                result.Add(listItem);
-            }
-        }
-        return result;
-    }
-
     private List<int> FullSubspace()
     {
         List<int> allPossibleValues = new List<int>();
@@ -90,5 +89,4 @@ public class Element
         }
         return allPossibleValues;
     }
-
 }

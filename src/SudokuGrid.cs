@@ -9,20 +9,15 @@ public class SudokuGrid
         inputArray = GetInputs();
     }
 
-    public int UnknownSquares()
+    public int UnknownSquares
     {
-        int knownSquares = 0;
-        foreach (int i in inputArray)
+        get
         {
-            if (i > 0)
-            {
-                knownSquares++;
-            }
+            return GetUnknownSquares();
         }
-        return 81 - knownSquares;
     }
 
-    private static int[] GetInputs()
+    private int[] GetInputs()
     {
         Console.WriteLine("Input:");
         string inputString = "";
@@ -51,5 +46,17 @@ public class SudokuGrid
         }
 
         return inputArray;
+    }
+    private int GetUnknownSquares()
+    {
+        int knownSquares = 0;
+        foreach (int i in inputArray)
+        {
+            if (i > 0)
+            {
+                knownSquares++;
+            }
+        }
+        return 81 - knownSquares;
     }
 }

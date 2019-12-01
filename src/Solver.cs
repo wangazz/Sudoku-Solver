@@ -7,7 +7,7 @@ namespace Sudoku_Solver
         static void Main()
         {
             SudokuGrid grid = new SudokuGrid();
-            while (grid.UnknownSquares() > 0)
+            while (grid.UnknownSquares > 0)
             {
                 for (int i = 0; i < grid.inputArray.Length; i++)
                 {
