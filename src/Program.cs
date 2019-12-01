@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sudoku_Solver
 {
@@ -7,14 +8,14 @@ namespace Sudoku_Solver
     {
         static void Main()
         {
-            int[] inputArray = GetInputs();
-            int unknownSquares = UnknownSquares(inputArray);
+            SudokuGrid grid = new SudokuGrid();
+            int[] inputArray = grid.inputArray;
+            int unknownSquares = grid.UnknownSquares(inputArray);
             while (unknownSquares > 0)
             {
                 for (int i = 0; i < inputArray.Length; i++)
                 {
-                    int val = inputArray[i];
-                    if (val == 0)
+                    if (inputArray[i] == 0)
                     {
                         int rowIndex = i / 9;
                         int columnIndex = i % 9;
@@ -22,7 +23,7 @@ namespace Sudoku_Solver
                         List<int> columnKnownValues = new List<int>();
                         List<int> squareKnownValues = new List<int>();
 
-                        for (int j = rowIndex * 9; j < rowIndex * 10; j++)
+                        for (int j = rowIndex * 9; j < rowIndex * 9 + 9; j++)
                         {
                             if (inputArray[j] != 0)
                             {
@@ -30,7 +31,7 @@ namespace Sudoku_Solver
                             }
                         }
 
-                        for (int j = columnIndex; j < columnIndex + 72; j += 9)
+                        for (int j = columnIndex; j <= columnIndex + 72; j += 9)
                         {
                             if (inputArray[j] != 0)
                             {
@@ -54,23 +55,21 @@ namespace Sudoku_Solver
                         }
 
                         inputArray[i] = Decide(rowKnownValues, columnKnownValues, squareKnownValues);
+                        unknownSquares = grid.UnknownSquares(inputArray);
                     }
                 }
             }
+            PrintOutput(inputArray);
         }
 
         private static int Decide(List<int> rowKnownValues, List<int> columnKnownValues, List<int> squareKnownValues)
         {
-            List<int> allPossibleValues = new List<int>();
-            for (int i = 0; i < 9; i++)
-            {
-                allPossibleValues.Add(i);
-            }
+            List<int> allPossibleValues = Subspace.AllPossibleValues();
             List<int> rowPossibleValues = ListComplement(rowKnownValues, allPossibleValues);
             List<int> columnPossibleValues = ListComplement(columnKnownValues, allPossibleValues);
             List<int> squarePossibleValues = ListComplement(squareKnownValues, allPossibleValues);
-            List<int> totalIntersection = 
-                ListIntersection(rowPossibleValues, ListIntersection(columnPossibleValues, squarePossibleValues));
+
+            List<int> totalIntersection = rowPossibleValues.Intersect(columnPossibleValues.Intersect(squarePossibleValues)).ToList();
             if (totalIntersection.Count == 1)
             {
                 return totalIntersection[0];
@@ -81,73 +80,28 @@ namespace Sudoku_Solver
             }
         }
 
-        private static List<int> ListIntersection(List<int> list1, List<int> list2)
+        private static List<int> ListComplement(List<int> list1, List<int> list2)
         {
             List<int> result = new List<int>();
             for (int i = 0; i < list2.Count; i++)
             {
-                if (list1.Contains(list2[i]))
+                int listItem = list2[i];
+                if (list1.Contains(listItem) == false)
                 {
-                    result.Add(list2[i]);
+                    result.Add(listItem);
                 }
             }
             return result;
         }
 
-        private static List<int> ListComplement(List<int> list1, List<int> list2)
+        private static void PrintOutput(int[] inputArray)
         {
-            for (int i = 0; i < list2.Count; i++)
-            {
-                if (list1.Contains(list2[i]))
-                {
-                    list2.Remove(list2[i]);
-                }
-            }
-            return list2;
-        }
-
-        private static int[] GetInputs()
-        {
-            Console.WriteLine("Input:");
-            string inputString = "";
-
-            while (inputString.Length != 81)
-            {
-                inputString = Console.ReadLine();
-                if (inputString.Length != 81)
-                {
-                    Console.WriteLine("Invalid input.");
-                }
-            }
-
-            int[] inputArray = new int[81];
-
-            for (int i = 0; i < 81; i++)
-            {
-                if (inputString[i] != '.')
-                {
-                    inputArray[i] = inputString[i];
-                }
-                else
-                {
-                    inputArray[i] = 0;
-                }
-            }
-
-            return inputArray;
-        }
-
-        private static int UnknownSquares(int[] inputArray)
-        {
-            int knownSquares = 0;
+            string outputString = "";
             foreach (int i in inputArray)
             {
-                if (i > 0)
-                {
-                    knownSquares++;
-                }
+                outputString += i.ToString();
             }
-            return 81 - knownSquares;
+            Console.WriteLine(outputString);
         }
     }
 }
