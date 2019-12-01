@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Sudoku_Solver
 {
@@ -10,21 +11,22 @@ namespace Sudoku_Solver
             int unknownSquares = UnknownSquares(inputArray);
             while (unknownSquares > 0)
             {
-                foreach(int i in inputArray)
+                for (int i = 0; i < inputArray.Length; i++)
                 {
-                    if (inputArray[i] == 0) 
+                    int val = inputArray[i];
+                    if (val == 0)
                     {
                         int rowIndex = i / 9;
                         int columnIndex = i % 9;
-                        int[] rowArray;
-                        int[] columnArray;
-                        int[] squareArray;
+                        List<int> rowKnownValues = new List<int>();
+                        List<int> columnKnownValues = new List<int>();
+                        List<int> squareKnownValues = new List<int>();
 
-                        for (int j = i - columnIndex; j < i - columnIndex + 9; j++)
+                        for (int j = rowIndex * 9; j < rowIndex * 10; j++)
                         {
                             if (inputArray[j] != 0)
                             {
-                                // push value to rowArray
+                                rowKnownValues.Add(inputArray[j]);
                             }
                         }
 
@@ -32,31 +34,46 @@ namespace Sudoku_Solver
                         {
                             if (inputArray[j] != 0)
                             {
-                                // push value to columnArray
+                                columnKnownValues.Add(inputArray[j]);
                             }
                         }
 
-                        for (something)
+                        int squareRowIndex = rowIndex / 3;
+                        int squareColumnIndex = columnIndex / 3;
+
+                        for (int j = squareRowIndex * 3; j < squareRowIndex * 3 + 3; j++)
                         {
-                            if (inputArray[j] != 0)
+                            for (int k = squareColumnIndex * 3; k < squareColumnIndex * 3 + 3; k++)
                             {
-                                // push value to squareArray
+                                int cellIndex = j * 9 + k;
+                                if (inputArray[cellIndex] != 0)
+                                {
+                                    squareKnownValues.Add(inputArray[cellIndex]);
+                                }
                             }
                         }
 
-                        // compare arrays here
-
-                        inputArray[i] = Decide(rowArray, columnArray, squareArray);
+                        inputArray[i] = Decide(rowKnownValues, columnKnownValues, squareKnownValues);
                     }
                 }
             }
         }
 
-        private static int Decide(int[] rowArray, int[] columnArray, int[] squareArray)
+        private static int Decide(List<int> rowKnownValues, List<int> columnKnownValues, List<int> squareKnownValues)
         {
-            if (single intersection of possible values)
+            List<int> allPossibleValues = new List<int>();
+            for (int i = 0; i < 9; i++)
             {
-                return intersection;
+                allPossibleValues.Add(i);
+            }
+            List<int> rowPossibleValues = ListComplement(rowKnownValues, allPossibleValues);
+            List<int> columnPossibleValues = ListComplement(columnKnownValues, allPossibleValues);
+            List<int> squarePossibleValues = ListComplement(squareKnownValues, allPossibleValues);
+            List<int> totalIntersection = 
+                ListIntersection(rowPossibleValues, ListIntersection(columnPossibleValues, squarePossibleValues));
+            if (totalIntersection.Count == 1)
+            {
+                return totalIntersection[0];
             }
             else
             {
@@ -64,19 +81,46 @@ namespace Sudoku_Solver
             }
         }
 
+        private static List<int> ListIntersection(List<int> list1, List<int> list2)
+        {
+            List<int> result = new List<int>();
+            for (int i = 0; i < list2.Count; i++)
+            {
+                if (list1.Contains(list2[i]))
+                {
+                    result.Add(list2[i]);
+                }
+            }
+            return result;
+        }
+
+        private static List<int> ListComplement(List<int> list1, List<int> list2)
+        {
+            for (int i = 0; i < list2.Count; i++)
+            {
+                if (list1.Contains(list2[i]))
+                {
+                    list2.Remove(list2[i]);
+                }
+            }
+            return list2;
+        }
+
         private static int[] GetInputs()
         {
             Console.WriteLine("Input:");
             string inputString = "";
 
-            while (inputString.Length != 81) {
+            while (inputString.Length != 81)
+            {
                 inputString = Console.ReadLine();
-                if (inputString.Length != 81) {
+                if (inputString.Length != 81)
+                {
                     Console.WriteLine("Invalid input.");
                 }
             }
 
-            int[] inputArray = new int[81];   
+            int[] inputArray = new int[81];
 
             for (int i = 0; i < 81; i++)
             {
