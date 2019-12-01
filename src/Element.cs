@@ -6,6 +6,7 @@ public class Element
     public List<int> rowKnownValues = new List<int>();
     public List<int> columnKnownValues = new List<int>();
     public List<int> boxKnownValues = new List<int>();
+    
     public int rowIndex;
     public int columnIndex;
     public int boxRowIndex;
@@ -19,27 +20,27 @@ public class Element
         boxRowIndex = rowIndex / 3;
         boxColumnIndex = columnIndex / 3;
 
-        for (int j = rowIndex * 9; j < rowIndex * 9 + 9; j++)
+        for (int i = rowIndex * 9; i < rowIndex * 9 + 9; i++)
         {
-            if (grid.inputArray[j] != 0)
+            if (grid.inputArray[i] != 0)
             {
-                rowKnownValues.Add(grid.inputArray[j]);
+                rowKnownValues.Add(grid.inputArray[i]);
             }
         }
 
-        for (int j = columnIndex; j <= columnIndex + 72; j += 9)
+        for (int i = columnIndex; i <= columnIndex + 72; i += 9)
         {
-            if (grid.inputArray[j] != 0)
+            if (grid.inputArray[i] != 0)
             {
-                columnKnownValues.Add(grid.inputArray[j]);
+                columnKnownValues.Add(grid.inputArray[i]);
             }
         }
 
-        for (int j = boxRowIndex * 3; j < boxRowIndex * 3 + 3; j++)
+        for (int i = boxRowIndex * 3; i < boxRowIndex * 3 + 3; i++)
         {
-            for (int k = boxColumnIndex * 3; k < boxColumnIndex * 3 + 3; k++)
+            for (int j = boxColumnIndex * 3; j < boxColumnIndex * 3 + 3; j++)
             {
-                int cellIndex = j * 9 + k;
+                int cellIndex = i * 9 + j;
                 if (grid.inputArray[cellIndex] != 0)
                 {
                     boxKnownValues.Add(grid.inputArray[cellIndex]);
