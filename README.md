@@ -1,5 +1,6 @@
 # Sudoku-Solver
 
+[![Build Status](https://circleci.com/gh/wangazz/Sudoku-Solver.svg?style=svg)](https://circleci.com/gh/wangazz/Sudoku-Solver)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Solves sudoku puzzles.
