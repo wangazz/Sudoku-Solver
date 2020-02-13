@@ -32,3 +32,30 @@ header p {
 .main-content {
     font-size: 14px;
 }
+
+.main-content > p {
+    margin-bottom: 30px;
+}
+
+table {
+    border: 2px solid black;
+    margin-bottom: 30px;
+}
+
+td.main-table-cell > input {
+    border: 1px solid black;
+    font-weight: bold;
+    font-size: 25px;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    vertical-align: center;
+}
+
+.main-button-container {
+    /* flex-direction: column; */
+}
+button.main-button {
+    height: 40px;
+    width: 100px;
+}
