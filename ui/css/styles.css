@@ -9,11 +9,13 @@ body {
 }
 
 .app {
-    /* height: 100vh; */
-    display: flex;
+    align-items: center;
+    display: inline;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    max-width: 960px;
+    margin: auto;
+    text-align: center;
 }
 
 header {
@@ -21,16 +23,16 @@ header {
 }
 header h1 {
     margin-bottom: 10px;
-    text-align: center;
     font-size: 40px;
 }
 header p {
-    text-align: center;
     font-size: 20px;
 }
 
 .main-content {
     font-size: 14px;
+    text-align: center;
+    align-items: center;
 }
 
 .main-content > p {
@@ -39,9 +41,8 @@ header p {
 
 table {
     border: 2px solid black;
-    margin-bottom: 30px;
+    margin: 0px auto 30px;
 }
-
 td.main-table-cell > input {
     border: 1px solid black;
     font-weight: bold;
@@ -53,9 +54,16 @@ td.main-table-cell > input {
 }
 
 .main-button-container {
-    /* flex-direction: column; */
+    margin: 0 auto;
 }
 button.main-button {
+    font-family: 'Montserrat', sans-serif;
     height: 40px;
     width: 100px;
+}
+.button-clear {
+    background-color: lightpink;
+}
+.button-calc {
+    background-color: lightcyan;
 }
