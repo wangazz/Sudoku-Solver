@@ -1,36 +1,25 @@
 version: 2.1
 
 orbs:
-    win: circleci/windows@1.0.0
+  win: circleci/windows@1.0.0
 
 jobs:
-    build:
-        working_directory: ~/ui
-        docker:
-            - image: circleci/node:10.16.3
-        # executor:
-        #     name: win/vs2019
-        #     shell: powershell.exe
-        steps:
-            - checkout
-            - run:
-                  name: update-npm
-                  command: 'sudo npm install -g npm@latest'
-            - restore_cache:
-                  keys:
-                      - dependency-cache-{{ checksum "package-lock.json" }}
-            - run:
-                  name: 'Install project dependencies'
-                  command: npm install
-            - save_cache:
-                  key: dependency-cache-{{ checksum "package-lock.json" }}
-                  paths:
-                      - ./node_modules
-            # - run:
-            #       name: 'Run Build step'
-            #       command: dotnet.exe publish -c Release -r win10-x64
-            # - run:
-            #       name: 'Test the executable'
-            #       command: .\bin\Release\netcoreapp2.1\win10-x64\publish\circleci-demo-windows.exe
-            # - store_artifacts:
-            #       path: .\bin\Release\netcoreapp2.1\win10-x64\publish\circleci-demo-windows.exe
+  build:
+    working_directory: ~/ui
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - run:
+            name: update-npm
+            command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+            keys:
+                - dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+            name: 'Install project dependencies'
+            command: npm install
+      - save_cache:
+            key: dependency-cache-{{ checksum "package-lock.json" }}
+            paths:
+                - ./node_modules
