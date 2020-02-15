@@ -1,3 +1,3 @@
-document.addEventListener('load', () => {
+window.addEventListener('load', () => {
     console.log('Page loads');
 });
